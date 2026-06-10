@@ -1,0 +1,30 @@
+name: weekly-retrain
+on:
+  schedule:
+    - cron: "30 10 * * 0"          # Sunday 16:00 IST
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  retrain:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements.txt
+      - name: fetch + train + validate
+        working-directory: ai
+        run: |
+          python fetch_data.py 365
+          python train.py
+          python backtest_ai.py
+      - name: commit new model
+        run: |
+          git config user.name "paper-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add ai/model.pkl ai/threshold.txt
+          git commit -m "weekly retrain $(date -u +%F)" || echo "no changes"
+          git pull --rebase || true
+          git push

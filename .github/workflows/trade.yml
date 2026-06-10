@@ -1,0 +1,29 @@
+name: paper-trade
+on:
+  schedule:
+    - cron: "*/15 12-18 * * *"     # every 15 min, 17:30-23:30 IST (12:00-18:00 UTC)
+  workflow_dispatch:                # manual run button
+concurrency:
+  group: trade
+  cancel-in-progress: false
+permissions:
+  contents: write
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -r requirements.txt
+      - run: python engine.py
+        working-directory: ai
+      - name: commit results
+        run: |
+          git config user.name "paper-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add -A
+          git commit -m "paper trade update $(date -u +'%F %T')" || echo "no changes"
+          git pull --rebase || true
+          git push
