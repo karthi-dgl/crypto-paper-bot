@@ -4,3 +4,9 @@ __pycache__/
 *.key
 trades.csv
 signals.csv
+ai/executor_trades.csv
+ai/executor_dashboard.html
+ai/executor_state.json
+ai/model_1yr.pkl
+ai/threshold_1yr.txt
+ai/oos_1yr.csv

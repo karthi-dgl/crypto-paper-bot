@@ -21,8 +21,10 @@ from zoneinfo import ZoneInfo
 
 import requests
 
+import exec_dashboard
 from features import SL_ATR
-from signal_logger import LOT, RISK, USDINR, decide, fetch, in_session
+from signal_logger import (FEE_MAKER, FEE_TAKER, LOT, RISK, USDINR,
+                           decide, fetch, in_session)
 
 MODE = os.getenv("BOT_MODE", "testnet")
 if MODE == "live" and os.getenv("I_UNDERSTAND_LIVE_RISK") != "yes":
@@ -82,6 +84,46 @@ class Delta:
         return self.send("DELETE", "/v2/orders/all", {"product_id": pid})
 
 
+def _ts(s):
+    try:
+        return datetime.fromisoformat(str(s).replace("Z", "+00:00")).timestamp()
+    except (ValueError, TypeError):
+        return 0
+
+
+def _close_trade(api, pid, st):
+    """Trade finished: read actual fills from the exchange, log to dashboard."""
+    if not st.get("active") or not st.get("bracketed"):
+        return
+    d = 1 if st["side"] == "BUY" else -1
+    close_side = "sell" if d == 1 else "buy"
+    try:
+        fills = api.get("/v2/fills", {"product_ids": pid, "page_size": 60}) or []
+    except Exception as e:
+        print("  fills fetch failed:", e)
+        fills = []
+    exits = [f for f in fills if f.get("side") == close_side
+             and _ts(f.get("created_at")) >= st.get("placed_at", 0)]
+    if exits:
+        qty = sum(int(f["size"]) for f in exits)
+        avg_exit = sum(float(f["price"]) * int(f["size"]) for f in exits) / qty
+    else:
+        avg_exit = st.get("entry", 0)
+    entry, lots = st.get("entry", 0), st.get("lots", 0)
+    gross = d * (avg_exit - entry) * lots * LOT * USDINR
+    fees = (entry * FEE_MAKER + avg_exit * FEE_TAKER) * lots * LOT * USDINR
+    levels = {"SL": st.get("sl"), "BE/TRAIL": entry, "TP2": st.get("tp2")}
+    levels = {k: v for k, v in levels.items() if v}
+    outcome = min(levels, key=lambda k: abs(avg_exit - levels[k])) if levels else "CLOSED"
+    exec_dashboard.append_trade({
+        "open_time": datetime.fromtimestamp(st.get("placed_at", 0), IST).strftime("%d %b %I:%M %p"),
+        "side": st["side"], "lots": lots, "entry": round(entry, 1),
+        "close_time": datetime.now(IST).strftime("%d %b %I:%M %p"),
+        "exit_price": round(avg_exit, 1), "outcome": outcome,
+        "gross_pnl": round(gross), "fees": round(fees), "net_pnl": round(gross - fees)})
+    print(f"  logged trade: {st['side']} {outcome} net Rs{gross - fees:+,.0f}")
+
+
 def load_state():
     try:
         return json.load(open(STATE))
@@ -107,6 +149,7 @@ def run():
     if size == 0:
         if st.get("active") and not orders:
             print(f"  position closed -> trade over, clearing state")
+            _close_trade(api, pid, st)
             st = {}
         if orders:
             entry_orders = [o for o in orders if not o.get("reduce_only")]
@@ -117,6 +160,7 @@ def run():
             elif not entry_orders:
                 print("  leftover bracket orders -> cancel all")
                 api.cancel_all(pid)
+                _close_trade(api, pid, st)
                 st = {}
         elif in_session(now):
             sig = decide(fetch(), *_load_model())
@@ -163,6 +207,7 @@ def run():
             print(f"  holding {st['side']} {abs(size)} lots (entry {st['entry']:,.0f})")
 
     save_state(st)
+    exec_dashboard.build()
 
 
 def _load_model():
@@ -179,6 +224,27 @@ if __name__ == "__main__":
         raise SystemExit("Set DELTA_API_KEY and DELTA_API_SECRET environment variables "
                          "(GitHub: repo Settings -> Secrets -> Actions)")
     if "--loop" in sys.argv:                  # local mode: checks every 15 minutes
+        import http.server
+        import threading
+        import webbrowser
+
+        class _Dash(http.server.SimpleHTTPRequestHandler):
+            def __init__(self, *a, **k):
+                super().__init__(*a, directory=HERE, **k)
+
+            def log_message(self, *a):
+                pass
+
+            def do_GET(self):
+                if self.path in ("/", ""):
+                    self.path = "/executor_dashboard.html"
+                return super().do_GET()
+
+        exec_dashboard.build()
+        srv = http.server.ThreadingHTTPServer(("127.0.0.1", 8787), _Dash)
+        threading.Thread(target=srv.serve_forever, daemon=True).start()
+        print("Dashboard: http://localhost:8787")
+        webbrowser.open("http://localhost:8787")
         print("Executor loop running. Ctrl+C to stop.")
         while True:
             try:
