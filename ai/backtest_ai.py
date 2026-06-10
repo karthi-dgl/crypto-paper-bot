@@ -42,6 +42,7 @@ def simulate(df, thresh):
             i += 1
             continue
 
+        outcome = "TIMEOUT"
         entry, atr0 = c[i], a[i]
         sl_d = SL_ATR * atr0
         sl = entry - side * sl_d
@@ -65,6 +66,7 @@ def simulate(df, thresh):
                 px = sl - side * SLIP
                 pnl += side * (px - entry) * lots_left * LOT * USDINR
                 pnl -= px * lots_left * LOT * USDINR * FEE_TAKER
+                outcome = "BE/TRAIL" if half_done else "SL"
                 break
             if hit_tp1:
                 pnl += side * (tp1 - entry) * half * LOT * USDINR
@@ -76,6 +78,7 @@ def simulate(df, thresh):
             if hit_tp2:
                 pnl += side * (tp2 - entry) * (lots - half) * LOT * USDINR
                 pnl -= tp2 * (lots - half) * LOT * USDINR * FEE_MAKER
+                outcome = "TP2"
                 break
             j += 1
         else:                                                     # time exit end of day
@@ -88,7 +91,8 @@ def simulate(df, thresh):
         n_day += 1
         trades.append({"time": str(t.iloc[i]), "month": str(t.iloc[i])[:7],
                        "side": "BUY" if side == 1 else "SELL", "conf": round(conf, 3),
-                       "entry": entry, "pnl": pnl, "phase": PHASES[int(df.phase.values[i])],
+                       "entry": entry, "pnl": pnl, "outcome": outcome,
+                       "phase": PHASES[int(df.phase.values[i])],
                        "hour": int(str(t.iloc[i])[11:13])})
         i = j + 1
     return pd.DataFrame(trades)
@@ -135,9 +139,15 @@ if __name__ == "__main__":
     print(f"Final equity:  Rs{s.get('final', CAPITAL):,.0f}  (from Rs{CAPITAL:,})")
     print(f"Max drawdown:  {s['dd']:.1%}")
     if not tr.empty:
-        print("\nBy month:")
-        print(tr.groupby("month").pnl.agg(["count", "sum"]).rename(
-            columns={"count": "trades", "sum": "P&L Rs"}).round(0).to_string())
+        print("\nMonth-by-month report card:")
+        pivot = tr.pivot_table(index="month", columns="outcome", values="pnl",
+                               aggfunc="count", fill_value=0).astype(int)
+        sides = tr.pivot_table(index="month", columns="side", values="pnl",
+                               aggfunc="count", fill_value=0).astype(int)
+        pnl_m = tr.groupby("month").pnl.sum().round(0)
+        wr_m = tr.groupby("month").pnl.apply(lambda s: f"{(s > 0).mean():.0%}")
+        rep = pd.concat([sides, pivot, pnl_m.rename("P&L Rs"), wr_m.rename("win%")], axis=1)
+        print(rep.to_string())
         print("\nBy market phase (where does the AI make money?):")
         print(tr.groupby("phase").pnl.agg(["count", "sum"]).rename(
             columns={"count": "trades", "sum": "P&L Rs"}).round(0).to_string())
