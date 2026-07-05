@@ -16,12 +16,12 @@ summary{cursor:pointer}.detail-grid{display:grid;grid-template-columns:repeat(au
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script></head><body>
 <h1>BTC AI Paper Trading — Delta India (simulated)</h1>
-<div class="sub">Updated 05 Jul 2026 01:45 IST
- · BTC $63,312 · capital ₹50,000 · paper money only</div>
+<div class="sub">Updated 05 Jul 2026 21:26 IST
+ · BTC $62,736 · capital ₹50,000 · paper money only</div>
 <div class="cards">
 <div class="card">Equity<div class="v red">₹49,341</div></div>
 <div class="card">Net P&L<div class="v red">₹-659</div></div>
-<div class="card">Trades<div class="v">1 closed / 0 open</div></div>
+<div class="card">Trades<div class="v">1 closed / 1 open</div></div>
 <div class="card">Win rate<div class="v">0%</div></div>
 <div class="card">Profit factor<div class="v">0.00</div></div>
 <div class="card">Fees paid<div class="v">₹165</div></div>
@@ -32,6 +32,12 @@ summary{cursor:pointer}.detail-grid{display:grid;grid-template-columns:repeat(au
 <h3>Trades</h3>
 <table><tr><th>ID</th><th>Side</th><th>Open time</th><th>Close time</th><th>Lots</th>
 <th>Capital used</th><th>Entry</th><th>Exit</th><th>Outcome</th><th>Net P&L</th></tr>
+<tr class="open">
+<td><a href="#t2">#2</a></td><td>BUY</td>
+<td>2026-07-05 21:00</td><td>OPEN</td>
+<td>39</td><td>₹212,663</td>
+<td>$62,677</td><td>—</td>
+<td>…</td><td class="amber">running</td></tr>
 <tr class="">
 <td><a href="#t1">#1</a></td><td>BUY</td>
 <td>2026-06-14 22:15</td><td>2026-06-14 23:00</td>
@@ -39,6 +45,7 @@ summary{cursor:pointer}.detail-grid{display:grid;grid-template-columns:repeat(au
 <td>$63,920</td><td>$63,763</td>
 <td>SL</td><td class="red">₹-659</td></tr></table>
 <h3>Trade details</h3>
+<details id="t2"><summary>Trade #2 — BUY 2026-07-05 21:00 — OPEN</summary><div class="detail-grid"><div><b>Status</b>OPEN</div><div><b>Side</b>BUY</div><div><b>Lots</b>39</div><div><b>Open</b>2026-07-05 21:00</div><div><b>Close</b>still open</div><div><b>Entry</b>$62,677.0</div><div><b>Stop loss</b>$62,532.3</div><div><b>TP1</b>$62,894.1</div><div><b>TP2</b>$63,111.2</div><div><b>Exit</b>—</div><div><b>Outcome</b>—</div><div><b>Capital used (notional)</b>₹212,663</div><div><b>Margin @10x approx</b>₹21,266</div><div><b>Gross P&L</b>—</div><div><b>Fees+GST</b>—</div><div><b>Net P&L</b>—</div><div><b>AI edge</b>+31.3%</div><div><b>Market phase</b>distribution</div></div></details>
 <details id="t1"><summary>Trade #1 — BUY 2026-06-14 22:15 — SL</summary><div class="detail-grid"><div><b>Status</b>CLOSED</div><div><b>Side</b>BUY</div><div><b>Lots</b>36</div><div><b>Open</b>2026-06-14 22:15</div><div><b>Close</b>2026-06-14 23:00</div><div><b>Entry</b>$63,920.5</div><div><b>Stop loss</b>$63,763.3</div><div><b>TP1</b>$64,156.3</div><div><b>TP2</b>$64,392.1</div><div><b>Exit</b>$63,762.8</div><div><b>Outcome</b>SL</div><div><b>Capital used (notional)</b>₹200,199</div><div><b>Margin @10x approx</b>₹20,020</div><div><b>Gross P&L</b>₹-494</div><div><b>Fees+GST</b>₹165</div><div><b>Net P&L</b>₹-659</div><div><b>AI edge</b>+41.7%</div><div><b>Market phase</b>trend-down</div></div></details>
 <p class="sub">Simulated fills with maker/taker fees + 18% GST and 1-tick slippage. Tax reserve
 assumes 30% slab on profits (futures = business income; confirm with a CA). Not financial advice.</p>
