@@ -16,28 +16,28 @@ summary{cursor:pointer}.detail-grid{display:grid;grid-template-columns:repeat(au
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script></head><body>
 <h1>BTC AI Paper Trading — Delta India (simulated)</h1>
-<div class="sub">Updated 26 Aug 2026 19:26 IST
- · BTC $78,254 · capital ₹50,000 · paper money only</div>
+<div class="sub">Updated 26 Aug 2026 20:20 IST
+ · BTC $77,979 · capital ₹50,000 · paper money only</div>
 <div class="cards">
-<div class="card">Equity<div class="v red">₹43,049</div></div>
-<div class="card">Net P&L<div class="v red">₹-6,951</div></div>
-<div class="card">Trades<div class="v">23 closed / 1 open</div></div>
-<div class="card">Win rate<div class="v">35%</div></div>
-<div class="card">Profit factor<div class="v">0.36</div></div>
-<div class="card">Fees paid<div class="v">₹5,738</div></div>
+<div class="card">Equity<div class="v red">₹42,466</div></div>
+<div class="card">Net P&L<div class="v red">₹-7,534</div></div>
+<div class="card">Trades<div class="v">24 closed / 0 open</div></div>
+<div class="card">Win rate<div class="v">33%</div></div>
+<div class="card">Profit factor<div class="v">0.35</div></div>
+<div class="card">Fees paid<div class="v">₹5,828</div></div>
 <div class="card">Tax reserve (30%)<div class="v amber">₹0</div></div>
-<div class="card">After-tax P&L<div class="v red">₹-6,951</div></div>
+<div class="card">After-tax P&L<div class="v red">₹-7,534</div></div>
 </div>
 <canvas id="eq" height="90"></canvas>
 <h3>Trades</h3>
 <table><tr><th>ID</th><th>Side</th><th>Open time</th><th>Close time</th><th>Lots</th>
 <th>Capital used</th><th>Entry</th><th>Exit</th><th>Outcome</th><th>Net P&L</th></tr>
-<tr class="open">
+<tr class="">
 <td><a href="#t24">#24</a></td><td>BUY</td>
-<td>2026-08-26 19:00</td><td>OPEN</td>
+<td>2026-08-26 19:00</td><td>2026-08-26 19:15</td>
 <td>16</td><td>₹109,214</td>
-<td>$78,458</td><td>—</td>
-<td>…</td><td class="amber">running</td></tr>
+<td>$78,458</td><td>$78,105</td>
+<td>SL</td><td class="red">₹-583</td></tr>
 <tr class="">
 <td><a href="#t23">#23</a></td><td>BUY</td>
 <td>2026-08-26 18:00</td><td>2026-08-26 18:45</td>
@@ -177,7 +177,7 @@ summary{cursor:pointer}.detail-grid{display:grid;grid-template-columns:repeat(au
 <td>$63,920</td><td>$63,763</td>
 <td>SL</td><td class="red">₹-659</td></tr></table>
 <h3>Trade details</h3>
-<details id="t24"><summary>Trade #24 — BUY 2026-08-26 19:00 — OPEN</summary><div class="detail-grid"><div><b>Status</b>OPEN</div><div><b>Side</b>BUY</div><div><b>Lots</b>16</div><div><b>Open</b>2026-08-26 19:00</div><div><b>Close</b>still open</div><div><b>Entry</b>$78,458.5</div><div><b>Stop loss</b>$78,105.1</div><div><b>TP1</b>$78,988.5</div><div><b>TP2</b>$79,518.6</div><div><b>Exit</b>—</div><div><b>Outcome</b>—</div><div><b>Capital used (notional)</b>₹109,214</div><div><b>Margin @10x approx</b>₹10,921</div><div><b>Gross P&L</b>—</div><div><b>Fees+GST</b>—</div><div><b>Net P&L</b>—</div><div><b>AI edge</b>+31.5%</div><div><b>Market phase</b>trend-down</div></div></details>
+<details id="t24"><summary>Trade #24 — BUY 2026-08-26 19:00 — SL</summary><div class="detail-grid"><div><b>Status</b>CLOSED</div><div><b>Side</b>BUY</div><div><b>Lots</b>16</div><div><b>Open</b>2026-08-26 19:00</div><div><b>Close</b>2026-08-26 19:15</div><div><b>Entry</b>$78,458.5</div><div><b>Stop loss</b>$78,105.1</div><div><b>TP1</b>$78,988.5</div><div><b>TP2</b>$79,518.6</div><div><b>Exit</b>$78,104.6</div><div><b>Outcome</b>SL</div><div><b>Capital used (notional)</b>₹109,214</div><div><b>Margin @10x approx</b>₹10,921</div><div><b>Gross P&L</b>₹-493</div><div><b>Fees+GST</b>₹90</div><div><b>Net P&L</b>₹-583</div><div><b>AI edge</b>+31.5%</div><div><b>Market phase</b>trend-down</div></div></details>
 <details id="t23"><summary>Trade #23 — BUY 2026-08-26 18:00 — SL</summary><div class="detail-grid"><div><b>Status</b>CLOSED</div><div><b>Side</b>BUY</div><div><b>Lots</b>17</div><div><b>Open</b>2026-08-26 18:00</div><div><b>Close</b>2026-08-26 18:45</div><div><b>Entry</b>$78,232.5</div><div><b>Stop loss</b>$77,908.9</div><div><b>TP1</b>$78,717.9</div><div><b>TP2</b>$79,203.3</div><div><b>Exit</b>$77,908.4</div><div><b>Outcome</b>SL</div><div><b>Capital used (notional)</b>₹115,706</div><div><b>Margin @10x approx</b>₹11,571</div><div><b>Gross P&L</b>₹-479</div><div><b>Fees+GST</b>₹95</div><div><b>Net P&L</b>₹-575</div><div><b>AI edge</b>+31.2%</div><div><b>Market phase</b>trend-down</div></div></details>
 <details id="t22"><summary>Trade #22 — BUY 2026-08-25 21:30 — SL</summary><div class="detail-grid"><div><b>Status</b>CLOSED</div><div><b>Side</b>BUY</div><div><b>Lots</b>13</div><div><b>Open</b>2026-08-25 21:30</div><div><b>Close</b>2026-08-25 22:45</div><div><b>Entry</b>$79,138.0</div><div><b>Stop loss</b>$78,726.3</div><div><b>TP1</b>$79,755.5</div><div><b>TP2</b>$80,373.1</div><div><b>Exit</b>$78,725.8</div><div><b>Outcome</b>SL</div><div><b>Capital used (notional)</b>₹89,505</div><div><b>Margin @10x approx</b>₹8,950</div><div><b>Gross P&L</b>₹-466</div><div><b>Fees+GST</b>₹74</div><div><b>Net P&L</b>₹-540</div><div><b>AI edge</b>+32.4%</div><div><b>Market phase</b>trend-down</div></div></details>
 <details id="t21"><summary>Trade #21 — BUY 2026-08-25 19:00 — SL</summary><div class="detail-grid"><div><b>Status</b>CLOSED</div><div><b>Side</b>BUY</div><div><b>Lots</b>14</div><div><b>Open</b>2026-08-25 19:00</div><div><b>Close</b>2026-08-25 19:15</div><div><b>Entry</b>$78,623.0</div><div><b>Stop loss</b>$78,223.7</div><div><b>TP1</b>$79,221.9</div><div><b>TP2</b>$79,820.9</div><div><b>Exit</b>$78,223.2</div><div><b>Outcome</b>SL</div><div><b>Capital used (notional)</b>₹95,763</div><div><b>Margin @10x approx</b>₹9,576</div><div><b>Gross P&L</b>₹-487</div><div><b>Fees+GST</b>₹79</div><div><b>Net P&L</b>₹-566</div><div><b>AI edge</b>+36.8%</div><div><b>Market phase</b>trend-down</div></div></details>
@@ -205,7 +205,7 @@ summary{cursor:pointer}.detail-grid{display:grid;grid-template-columns:repeat(au
 assumes 30% slab on profits (futures = business income; confirm with a CA). Not financial advice.</p>
 <script>
 new Chart(document.getElementById('eq'),{type:'line',
-data:{labels:[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],datasets:[{data:[50000, 49341, 50355, 49476, 49832, 48886, 48012, 48171, 47445, 47730, 47085, 46006, 46782, 47240, 47720, 47018, 46998, 45402, 45863, 45255, 44730, 44164, 43624, 43049],borderColor:'#1d9bf0',
+data:{labels:[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],datasets:[{data:[50000, 49341, 50355, 49476, 49832, 48886, 48012, 48171, 47445, 47730, 47085, 46006, 46782, 47240, 47720, 47018, 46998, 45402, 45863, 45255, 44730, 44164, 43624, 43049, 42466],borderColor:'#1d9bf0',
 backgroundColor:'rgba(29,155,240,.15)',fill:true,tension:.25,pointRadius:0}]},
 options:{plugins:{legend:{display:false}},scales:{x:{display:false},
 y:{grid:{color:'#222c36'}}}}});
