@@ -16,12 +16,12 @@ summary{cursor:pointer}.detail-grid{display:grid;grid-template-columns:repeat(au
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script></head><body>
 <h1>BTC AI Paper Trading — Delta India (simulated)</h1>
-<div class="sub">Updated 21 Sep 2026 02:30 IST
- · BTC $81,058 · capital ₹50,000 · paper money only</div>
+<div class="sub">Updated 21 Sep 2026 23:30 IST
+ · BTC $85,848 · capital ₹50,000 · paper money only</div>
 <div class="cards">
 <div class="card">Equity<div class="v red">₹42,831</div></div>
 <div class="card">Net P&L<div class="v red">₹-7,169</div></div>
-<div class="card">Trades<div class="v">29 closed / 0 open</div></div>
+<div class="card">Trades<div class="v">29 closed / 1 open</div></div>
 <div class="card">Win rate<div class="v">41%</div></div>
 <div class="card">Profit factor<div class="v">0.41</div></div>
 <div class="card">Fees paid<div class="v">₹6,669</div></div>
@@ -32,6 +32,12 @@ summary{cursor:pointer}.detail-grid{display:grid;grid-template-columns:repeat(au
 <h3>Trades</h3>
 <table><tr><th>ID</th><th>Side</th><th>Open time</th><th>Close time</th><th>Lots</th>
 <th>Capital used</th><th>Entry</th><th>Exit</th><th>Outcome</th><th>Net P&L</th></tr>
+<tr class="open">
+<td><a href="#t30">#30</a></td><td>BUY</td>
+<td>2026-09-21 23:15</td><td>OPEN</td>
+<td>13</td><td>₹97,111</td>
+<td>$85,863</td><td>—</td>
+<td>…</td><td class="amber">running</td></tr>
 <tr class="">
 <td><a href="#t29">#29</a></td><td>BUY</td>
 <td>2026-09-19 20:45</td><td>2026-09-19 21:15</td>
@@ -207,6 +213,7 @@ summary{cursor:pointer}.detail-grid{display:grid;grid-template-columns:repeat(au
 <td>$63,920</td><td>$63,763</td>
 <td>SL</td><td class="red">₹-659</td></tr></table>
 <h3>Trade details</h3>
+<details id="t30"><summary>Trade #30 — BUY 2026-09-21 23:15 — OPEN</summary><div class="detail-grid"><div><b>Status</b>OPEN</div><div><b>Side</b>BUY</div><div><b>Lots</b>13</div><div><b>Open</b>2026-09-21 23:15</div><div><b>Close</b>still open</div><div><b>Entry</b>$85,863.0</div><div><b>Stop loss</b>$85,450.2</div><div><b>TP1</b>$86,482.1</div><div><b>TP2</b>$87,101.3</div><div><b>Exit</b>—</div><div><b>Outcome</b>—</div><div><b>Capital used (notional)</b>₹97,111</div><div><b>Margin @10x approx</b>₹9,711</div><div><b>Gross P&L</b>—</div><div><b>Fees+GST</b>—</div><div><b>Net P&L</b>—</div><div><b>AI edge</b>+53.3%</div><div><b>Market phase</b>trend-up</div></div></details>
 <details id="t29"><summary>Trade #29 — BUY 2026-09-19 20:45 — BE/TRAIL</summary><div class="detail-grid"><div><b>Status</b>CLOSED</div><div><b>Side</b>BUY</div><div><b>Lots</b>34</div><div><b>Open</b>2026-09-19 20:45</div><div><b>Close</b>2026-09-19 21:15</div><div><b>Entry</b>$81,546.0</div><div><b>Stop loss</b>$81,380.1</div><div><b>TP1</b>$81,794.9</div><div><b>TP2</b>$82,043.8</div><div><b>Exit</b>$81,626.7</div><div><b>Outcome</b>BE/TRAIL</div><div><b>Capital used (notional)</b>₹241,213</div><div><b>Margin @10x approx</b>₹24,121</div><div><b>Gross P&L</b>₹+488</div><div><b>Fees+GST</b>₹157</div><div><b>Net P&L</b>₹+331</div><div><b>AI edge</b>+33.8%</div><div><b>Market phase</b>trend-up</div></div></details>
 <details id="t28"><summary>Trade #28 — BUY 2026-09-17 21:45 — SL</summary><div class="detail-grid"><div><b>Status</b>CLOSED</div><div><b>Side</b>BUY</div><div><b>Lots</b>18</div><div><b>Open</b>2026-09-17 21:45</div><div><b>Close</b>2026-09-18 03:15</div><div><b>Entry</b>$76,691.0</div><div><b>Stop loss</b>$76,372.2</div><div><b>TP1</b>$77,169.2</div><div><b>TP2</b>$77,647.4</div><div><b>Exit</b>$76,371.7</div><div><b>Outcome</b>SL</div><div><b>Capital used (notional)</b>₹120,098</div><div><b>Margin @10x approx</b>₹12,010</div><div><b>Gross P&L</b>₹-500</div><div><b>Fees+GST</b>₹99</div><div><b>Net P&L</b>₹-599</div><div><b>AI edge</b>+17.6%</div><div><b>Market phase</b>accumulation</div></div></details>
 <details id="t27"><summary>Trade #27 — SELL 2026-09-16 21:30 — BE/TRAIL</summary><div class="detail-grid"><div><b>Status</b>CLOSED</div><div><b>Side</b>SELL</div><div><b>Lots</b>21</div><div><b>Open</b>2026-09-16 21:30</div><div><b>Close</b>2026-09-16 23:15</div><div><b>Entry</b>$75,818.5</div><div><b>Stop loss</b>$76,079.8</div><div><b>TP1</b>$75,426.6</div><div><b>TP2</b>$75,034.6</div><div><b>Exit</b>$75,819.0</div><div><b>Outcome</b>BE/TRAIL</div><div><b>Capital used (notional)</b>₹138,520</div><div><b>Margin @10x approx</b>₹13,852</div><div><b>Gross P&L</b>₹+340</div><div><b>Fees+GST</b>₹91</div><div><b>Net P&L</b>₹+249</div><div><b>AI edge</b>+12.1%</div><div><b>Market phase</b>accumulation</div></div></details>
