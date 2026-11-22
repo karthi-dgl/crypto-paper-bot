@@ -122,11 +122,15 @@ def build_features(df):
     f["adx"] = adx(df)
     f["roc_6h"] = c.pct_change(24) * 100
     # 1h timeframe (resample on 4-bar groups)
-    c1h = c.groupby(df.index // 4).transform("last")
-    e20h = ema(c.iloc[3::4], 20).reindex(df.index).ffill()
-    e50h = ema(c.iloc[3::4], 50).reindex(df.index).ffill()
+    # Higher-timeframe closes are taken from the LAST 15m bar of each clock hour / 4h
+    # block (aligned to wall-clock time, not row position, so live and training match).
+    hour_end = ((df.time + 900) % 3600 == 0).values
+    four_end = ((df.time + 900) % 14400 == 0).values
+    c_1h, c_4h = c[hour_end], c[four_end]
+    e20h = ema(c_1h, 20).reindex(df.index).ffill()
+    e50h = ema(c_1h, 50).reindex(df.index).ffill()
     f["ema_dist_1h"] = (e20h - e50h) / a
-    f["rsi_1h"] = rsi(c.iloc[3::4]).reindex(df.index).ffill()
+    f["rsi_1h"] = rsi(c_1h).reindex(df.index).ffill()
 
     # B. volatility & location
     f["atr_pct"] = a / c * 100
@@ -158,8 +162,11 @@ def build_features(df):
     f["sweep"], f["fvg_dist"], f["ob_dist"] = sweep, fvg_dist, ob_dist
     utc_h = ts.dt.tz_convert("UTC").dt.hour
     asia = (utc_h < 8)
-    asia_hi = h.where(asia).groupby(day).transform("max")
-    asia_lo = l.where(asia).groupby(day).transform("min")
+    # Causal Asia range: running high/low of Asia bars seen SO FAR (previous bars only).
+    # Before today's Asia window opens, yesterday's completed range is used.
+    # (The old groupby(day).transform("max") used the whole day's range = future data.)
+    asia_hi = h.where(asia).groupby(day).cummax().ffill().shift(1)
+    asia_lo = l.where(asia).groupby(day).cummin().ffill().shift(1)
     f["asia_break"] = np.where(c > asia_hi, 1, np.where(c < asia_lo, -1, 0))
     f["round_dist"] = (c % 1000) / 1000
 
@@ -168,8 +175,8 @@ def build_features(df):
     pos_in_bar = ((c - l) - (h - c)) / rng
     f["cvd_20"] = (pos_in_bar * v).rolling(20).sum() / v.rolling(20).sum()
     # F. v2 extra inputs
-    e20_4h = ema(c.iloc[15::16], 20).reindex(df.index).ffill()
-    e50_4h = ema(c.iloc[15::16], 50).reindex(df.index).ffill()
+    e20_4h = ema(c_4h, 20).reindex(df.index).ffill()
+    e50_4h = ema(c_4h, 50).reindex(df.index).ffill()
     f["ema_dist_4h"] = (e20_4h - e50_4h) / a          # third timeframe
     f["rsi_chg"] = f["rsi"].diff(4)                   # momentum of momentum
     f["atr_rank"] = a.rolling(480).rank(pct=True)     # volatility percentile

@@ -21,13 +21,17 @@ TRAIL_ATR = 2.2
 MAX_TRADES_DAY = 3
 DAY_STOP = -0.02 * CAPITAL
 PHASES = {0: "chop", 1: "trend-up", 2: "trend-down", 3: "accumulation", 4: "distribution"}
+HORIZON = 32                # 8h timeout, same as the live engine
+SESSION_START, SESSION_END = "17:30", "23:30"   # live engine only opens trades in this window
 
 
-def simulate(df, thresh):
+def simulate(df, thresh, session_only=True):
+    """Mirrors engine.py: session-only entries, 8h timeout, min 2 lots."""
     trades = []
     i, n = 0, len(df)
     t = pd.to_datetime(df.time, unit="s", utc=True).dt.tz_convert("Asia/Kolkata")
     day = t.dt.date.values
+    hm = t.dt.strftime("%H:%M").values
     h, l, c, a = df.high.values, df.low.values, df.close.values, df.atr.values
     pl, ps, pn = df.p_long.values, df.p_short.values, df.p_none.values
     cur_day, n_day, pnl_day = None, 0, 0.0
@@ -38,7 +42,9 @@ def simulate(df, thresh):
         side = 1 if pl[i] >= ps[i] else -1
         conf = max(pl[i], ps[i])
         edge = conf - pn[i]                 # v2: confidence must BEAT "no-edge" prob
-        if edge < thresh or n_day >= MAX_TRADES_DAY or pnl_day <= DAY_STOP or not a[i] > 0:
+        out_of_session = session_only and not (SESSION_START <= hm[i] <= SESSION_END)
+        if (out_of_session or edge < thresh or n_day >= MAX_TRADES_DAY
+                or pnl_day <= DAY_STOP or not a[i] > 0):
             i += 1
             continue
 
@@ -48,15 +54,13 @@ def simulate(df, thresh):
         sl = entry - side * sl_d
         tp1 = entry + side * TP1_R * sl_d
         tp2 = entry + side * TP2_R * sl_d
-        lots = int(RISK // (sl_d * LOT * USDINR))
-        if lots < 2:
-            i += 1
-            continue
+        lots = max(int(RISK // (sl_d * LOT * USDINR)), 2)      # same sizing as engine.py
         half = lots // 2
         pnl = -entry * lots * LOT * USDINR * FEE_MAKER          # entry fee (maker)
         half_done, extreme = False, entry
         j = i + 1
-        while j < n and day[j] == day[i + 1]:                    # manage same/next day only
+        end = min(i + 1 + HORIZON, n)
+        while j < end:                                           # 8h window, like engine.py
             extreme = max(extreme, h[j]) if side == 1 else min(extreme, l[j])
             hit_sl = l[j] <= sl if side == 1 else h[j] >= sl
             hit_tp1 = (h[j] >= tp1 if side == 1 else l[j] <= tp1) and not half_done
@@ -81,8 +85,8 @@ def simulate(df, thresh):
                 outcome = "TP2"
                 break
             j += 1
-        else:                                                     # time exit end of day
-            j = min(j, n - 1)
+        else:                                                     # 8h timeout exit
+            j = end - 1
             lots_left = lots - half if half_done else lots
             pnl += side * (c[j] - entry) * lots_left * LOT * USDINR
             pnl -= c[j] * lots_left * LOT * USDINR * FEE_TAKER
@@ -114,6 +118,7 @@ if __name__ == "__main__":
     df = pd.read_csv("oos_predictions.csv")
     mid = len(df) // 2
     tune, test = df.iloc[:mid], df.iloc[mid:]
+    print(f"Entries limited to {SESSION_START}-{SESSION_END} IST (same as the live engine).\n")
 
     print("Tuning edge margin (confidence minus no-edge prob) on first half of unseen data:")
     best, best_pnl = None, -1e18
